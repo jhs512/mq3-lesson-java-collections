@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "id": "java-collections",
+  "revision": "v1.0.0",
+  "title": "컬렉션·제네릭·예외",
+  "description": "크기가 변하는 자료와 잘못된 입력을 다뤄요.",
+  "sources": [
+    "https://slog.gg/p/14146"
+  ],
+  "sections": [
+    {
+      "id": "reading-1",
+      "title": "List와 Map을 고르는 기준",
+      "body": "배열은 만들 때 길이를 정해요.\n등록과 삭제가 많으면 목록(List)을 사용해요.\n`List<String>`은 문자열 목록이라는 뜻이에요.\n제네릭은 자료형의 실수를 일찍 찾아줘요.\n\n```java\nvar names = new java.util.ArrayList<String>();\nnames.add(\"민수\");\nSystem.out.println(names.size());\n```\n\n실행하면 등록한 원소 수가 보여요.\n이제 한 명을 더 넣고 첫 원소를 지워봐요.\n\n```java\nnames.add(\"영희\");\nnames.remove(0);\nSystem.out.println(names.get(0));\n```\n\n남은 원소는 영희예요.\n조심하세요. 삭제하면 뒤 원소의 위치가 바뀌어요.\n업무상의 ID와 목록 인덱스는 구분해야 해요.\n키로 찾을 때는 사전(Map)을 사용해요.\n같은 키에 put하면 기존 값이 교체돼요.\n"
+    },
+    {
+      "id": "reading-2",
+      "title": "예외를 경계에서 다루기",
+      "body": "숫자가 아닌 입력은 parseInt로 읽을 수 없어요.\n이때 NumberFormatException이 발생해요.\n입력을 받는 경계에서 그 예외를 처리하세요.\n모든 예외를 숨기면 버그도 못 찾게 돼요.\n정상 결과와 실패 결과를 구분해 돌려주세요.\n빈 목록, 중복 키, 잘못된 숫자를 검사해요.\n"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "unique-names",
+      "title": "등장 순서대로 중복 제거",
+      "goal": "`unique(List<String>)`을 구현하세요.\n처음 등장한 순서를 유지하세요.\n원본 목록은 변경하지 마세요.",
+      "language": "junit",
+      "entry_file": "Exercise.java",
+      "starter_code": "class Exercise {\n    // 필요한 메서드를 여기에 작성하세요.\n}\n",
+      "solution": "import java.util.*;\nclass Exercise {\n    static List<String> unique(List<String> names) {\n        // 새 목록을 만들어 원본을 보호해요.\n        var result = new ArrayList<String>();\n        for (String name : names) {\n            // 처음 만난 이름만 추가해요.\n            if (!result.contains(name)) result.add(name);\n        }\n        return result;\n    }\n}\n",
+      "files": {
+        "ExerciseTest.java": "import org.junit.jupiter.api.Test;\nimport static org.assertj.core.api.Assertions.*;\nclass ExerciseTest {\n@Test void preservesOrderAndInput() {\n    var input = new java.util.ArrayList<>(java.util.List.of(\"나\", \"가\", \"나\", \"다\"));\n    assertThat(Exercise.unique(input)).containsExactly(\"나\", \"가\", \"다\");\n    assertThat(input).containsExactly(\"나\", \"가\", \"나\", \"다\");\n    assertThat(Exercise.unique(java.util.List.of())).isEmpty();\n}\n\n}\n",
+        "build.gradle": "plugins { id 'java' }\nrepositories { mavenCentral() }\njava { toolchain { languageVersion = JavaLanguageVersion.of(25) } }\ndependencies {\n    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'\n    testImplementation 'org.assertj:assertj-core:3.27.7'\n    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'\n}\nsourceSets { test { java { srcDirs = ['.']; include '*.java' } } }\ntest { useJUnitPlatform() }\n",
+        "settings.gradle": "rootProject.name = 'mq3-exercise'\n"
+      },
+      "tests": [],
+      "web_checks": [],
+      "mutations": [],
+      "required": true,
+      "narration": [
+        {
+          "action": "say",
+          "target": "problem",
+          "text": "`unique(List<String>)`을 구현하세요.\n처음 등장한 순서를 유지하세요.\n원본 목록은 변경하지 마세요."
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 실행 성공과 모든 검사 통과는 달라요. 단계마다 결과를 확인해요."
+        },
+        {
+          "action": "set_code",
+          "code": "import java.util.*;\nclass Exercise {\n    static List<String> unique(List<String> names) {/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");}\n}\n",
+          "say": "선언과 생성자를 먼저 준비했어요. 메서드는 하나씩 채울게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": true
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "아직 구현하지 않은 메서드가 있어요. 지금 실패하는 위치를 확인하세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "\n        // 새 목록을 만들어 원본을 보호해요.\n        var result = new ArrayList<String>();\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "say": "작은 조각을 채워요. 앞뒤의 변수와 조건을 함께 확인하세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "        for (String name : names) {\n            // 처음 만난 이름만 추가해요.\n            if (!result.contains(name)) result.add(name);\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "        }\n        return result;\n    /*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": ""
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 읽어보세요. 아직 남은 검사와 통과한 검사를 비교해요."
+        }
+      ],
+      "source_hash": "70c96bbca914d12e576a31c96176caee92f79dc73ecf96123d4deb91fc6980e9"
+    },
+    {
+      "id": "safe-count",
+      "title": "숫자 입력을 안전하게 읽기",
+      "goal": "`count(String)`을 구현하세요.\n공백을 제거한 뒤 0 이상인 정수만 인정해요.\nnull, 빈 문자열, 음수, 숫자가 아닌 값은 -1이에요.",
+      "language": "junit",
+      "entry_file": "Exercise.java",
+      "starter_code": "class Exercise {\n    // 필요한 메서드를 여기에 작성하세요.\n}\n",
+      "solution": "class Exercise {\n    static int count(String text) {\n        // null은 문자열 메서드를 호출하기 전에 확인해요.\n        if (text == null) return -1;\n        try {\n            int value = Integer.parseInt(text.trim());\n            // 범위를 벗어난 입력도 실패로 구분해요.\n            return value >= 0 ? value : -1;\n        } catch (NumberFormatException e) {\n            // 숫자 변환 실패만 여기에서 처리해요.\n            return -1;\n        }\n    }\n}\n",
+      "files": {
+        "ExerciseTest.java": "import org.junit.jupiter.api.Test;\nimport static org.assertj.core.api.Assertions.*;\nclass ExerciseTest {\n@Test void inputBoundaries() {\n    assertThat(Exercise.count(\" 12 \")).isEqualTo(12);\n    assertThat(Exercise.count(\"0\")).isZero();\n    for (String s : new String[]{null,\"\",\"-1\",\"abc\",\"999999999999\"}) assertThat(Exercise.count(s)).isEqualTo(-1);\n}\n\n}\n",
+        "build.gradle": "plugins { id 'java' }\nrepositories { mavenCentral() }\njava { toolchain { languageVersion = JavaLanguageVersion.of(25) } }\ndependencies {\n    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'\n    testImplementation 'org.assertj:assertj-core:3.27.7'\n    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'\n}\nsourceSets { test { java { srcDirs = ['.']; include '*.java' } } }\ntest { useJUnitPlatform() }\n",
+        "settings.gradle": "rootProject.name = 'mq3-exercise'\n"
+      },
+      "tests": [],
+      "web_checks": [],
+      "mutations": [],
+      "required": true,
+      "narration": [
+        {
+          "action": "say",
+          "target": "problem",
+          "text": "`count(String)`을 구현하세요.\n공백을 제거한 뒤 0 이상인 정수만 인정해요.\nnull, 빈 문자열, 음수, 숫자가 아닌 값은 -1이에요."
+        },
+        {
+          "action": "say",
+          "target": "editor",
+          "text": "조심하세요. 실행 성공과 모든 검사 통과는 달라요. 단계마다 결과를 확인해요."
+        },
+        {
+          "action": "set_code",
+          "code": "class Exercise {\n    static int count(String text) {/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");}\n}\n",
+          "say": "선언과 생성자를 먼저 준비했어요. 메서드는 하나씩 채울게요."
+        },
+        {
+          "action": "run",
+          "expected_failure": true
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "아직 구현하지 않은 메서드가 있어요. 지금 실패하는 위치를 확인하세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "\n        // null은 문자열 메서드를 호출하기 전에 확인해요.\n        if (text == null) return -1;\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "say": "작은 조각을 채워요. 앞뒤의 변수와 조건을 함께 확인하세요."
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "        try {\n            int value = Integer.parseInt(text.trim());\n            // 범위를 벗어난 입력도 실패로 구분해요.\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "            return value >= 0 ? value : -1;\n        } catch (NumberFormatException e) {\n            // 숫자 변환 실패만 여기에서 처리해요.\n/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": "            return -1;\n        }\n    /*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");"
+        },
+        {
+          "action": "patch_code",
+          "before": "/*mq3-step-0*/throw new UnsupportedOperationException(\"아직 구현 전이에요\");",
+          "after": ""
+        },
+        {
+          "action": "run",
+          "expected_failure": false
+        },
+        {
+          "action": "say",
+          "target": "output",
+          "text": "실행 결과를 읽어보세요. 아직 남은 검사와 통과한 검사를 비교해요."
+        }
+      ],
+      "source_hash": "c8564dd1dd53315aedf2cd18e21f25b433044bd7b4bbb178bbc1bbee20b615a3"
+    }
+  ]
+}
